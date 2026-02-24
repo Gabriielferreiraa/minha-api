@@ -1,31 +1,27 @@
 const express = require('express');
+const cors = require('cors'); // Importa o CORS para permitir que o HTML fale com a API
 const app = express();
 
-// OBRIGATÓRIO: Faz o servidor entender quando você envia um JSON pelo Insomnia
+app.use(cors()); // Ativa o CORS (isso resolve o bloqueio do navegador)
 app.use(express.json());
 
-// Rota de Teste (Navegador): Acesse para ver se a API está online
+// Rota de Teste
 app.get('/', (req, res) => {
-    res.send("API de Licenças Online!");
+    res.send("API de Licenças Online e com CORS liberado!");
 });
 
-// Rota Principal (POST): Onde as licenças são geradas
+// Rota Principal
 app.post('/api/generate_license', (req, res) => {
     const { token, name, email, product_id } = req.body;
 
-    // Verificação básica: se não enviar token ou e-mail, dá erro
     if (!token || !email) {
-        return res.status(400).json({ 
-            status: false, 
-            message: "Dados obrigatórios ausentes (token ou email)." 
-        });
+        return res.status(400).json({ status: false, message: "Dados incompletos" });
     }
 
-    // Resposta que você deseja receber no Insomnia
     res.json({
         "status": true,
         "message": "Licença gerada com sucesso",
-        "license_code": "A1B2-C3D4-E5F6-G7H8",
+        "license_code": "A1B2-C3D4-E5F6-G7H8", // Aqui você pode depois criar uma lógica de código aleatório
         "email": email,
         "name": name,
         "product_id": product_id,
@@ -35,8 +31,5 @@ app.post('/api/generate_license', (req, res) => {
     });
 });
 
-// O Render define a porta automaticamente, por isso usamos process.env.PORT
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Servidor rodando localmente em http://localhost:${PORT}`);
-});
+app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
