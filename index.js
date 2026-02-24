@@ -4,6 +4,7 @@ const app = express();
 
 app.use(cors()); // Ativa o CORS (isso resolve o bloqueio do navegador)
 app.use(express.json());
+app.use(express.static('public'));
 
 // Rota de Teste
 app.get('/', (req, res) => {
