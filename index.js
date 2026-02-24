@@ -1,17 +1,18 @@
 const express = require('express');
-const cors = require('cors'); // Importa o CORS para permitir que o HTML fale com a API
+const cors = require('cors');
 const app = express();
 
-app.use(cors()); // Ativa o CORS (isso resolve o bloqueio do navegador)
+app.use(cors());
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static('public')); // Serve o HTML da pasta 'public' automaticamente
 
-// Rota de Teste
-app.get('/', (req, res) => {
-    res.send("API de Licenças Online e com CORS liberado!");
-});
+// Função para gerar um código aleatório (Ex: XXXX-XXXX-XXXX)
+function gerarCodigo() {
+    const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const pedaço = () => Array.from({length: 4}, () => caracteres.charAt(Math.floor(Math.random() * caracteres.length))).join('');
+    return `${pedaço()}-${pedaço()}-${pedaço()}`;
+}
 
-// Rota Principal
 app.post('/api/generate_license', (req, res) => {
     const { token, name, email, product_id } = req.body;
 
@@ -22,7 +23,7 @@ app.post('/api/generate_license', (req, res) => {
     res.json({
         "status": true,
         "message": "Licença gerada com sucesso",
-        "license_code": "A1B2-C3D4-E5F6-G7H8", // Aqui você pode depois criar uma lógica de código aleatório
+        "license_code": gerarCodigo(), // AGORA É ALEATÓRIO!
         "email": email,
         "name": name,
         "product_id": product_id,
